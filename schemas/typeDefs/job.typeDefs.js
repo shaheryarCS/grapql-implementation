@@ -7,7 +7,6 @@ const jobTypeDefs = gql`
     _id: String
     userId: String
     name: String
-    password: String
     status: String
     createdAt: DateTime
     updatedAt: DateTime

@@ -13,6 +13,10 @@ const jobchema = gql`
       updatedAt: DateTime
     }
 
+    type Query {
+      getJobById(id: ID!): Job!
+    }
+
     type Mutation {
       create(input: createInput): JobType
     }
