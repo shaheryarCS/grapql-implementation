@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import allTypeDefs from './schemas/index.schema.js';
 import allResolvers from './resolvers/index.resolver.js';
 import context from './context/context.js';
+import { graphglPlugin } from './config/graphql.plugins.js';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const server = new ApolloServer({
   resolvers: allResolvers,
   includeStacktraceInErrorResponses: false, //to exclude stackTrace parameter from error messages
   introspection: true,
+  plugins:[graphglPlugin] // inlcuded logging plugin
 });
 
 const mongoDB = process.env.MONGODB_URL;
