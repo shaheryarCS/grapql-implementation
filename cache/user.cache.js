@@ -31,8 +31,6 @@ export const getUserRedis = async(_id)=>{
 export const deleteUserRedis = async(_id)=>{
     try {
         const userHashkey = `userId-${_id}`
-        console.log(_id);
-
         const userDeleted = await redisClient.del(userHashkey);
         return userDeleted
     } catch (error) {

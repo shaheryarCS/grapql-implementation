@@ -17,9 +17,7 @@ const getUser = async (token) => {
 };
 
 const context = async ({ req, res }) => {
-    console.log(req.body.operationName);
   if (req.body.operationName === 'IntrospectionQuery') {
-    // console.log('blocking introspection query..');
     return {};
   }
   // allowing the 'CreateUser' and 'Login' queries to pass without giving the token

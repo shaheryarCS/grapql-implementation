@@ -7,7 +7,6 @@ const jobResolver = {
     // Destructing {total} is same sa args.total
     getJobById:  async (_, { id }, context) => {
       try {
-        console.log("id",id);
         const job = await JobModel.findById(id);
         return job;
       } catch (error) {

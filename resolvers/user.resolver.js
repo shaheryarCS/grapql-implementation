@@ -24,7 +24,8 @@ const userResolver = {
 
     getUserById: async (_, { id }, contextValue) => {
       try {
-        const user = await UserModel.findById(id);
+        const userId = contextValue?.user?.userId
+        const user = await UserModel.findById(userId);
         return user;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -35,7 +36,6 @@ const userResolver = {
   Mutation: {
     signup: async (_, { input }) => {
       const { email, password, fname, lname } = input;
-      console.log("aaaaa");
       const isUserExists = await userHelper.isEmailAlreadyExist(email);
       if (isUserExists) {
         throwCustomError(
@@ -95,7 +95,6 @@ const userResolver = {
       const userId = context?.user?.userId;
       let user; 
       user = await UserModel.findByIdAndUpdate({_id:userId},input,{new:true});
-      console.log("context",context);
 
       return {
         fname:user?.fname,
@@ -148,7 +147,6 @@ const userResolver = {
   CreateUser: {
     signup: async (_, { input }) => {
       const { email, password, fname, lname } = input;
-      console.log("aaaaa");
       const isUserExists = await userHelper.isEmailAlreadyExist(email);
       if (isUserExists) {
         throwCustomError(
@@ -179,30 +177,6 @@ const userResolver = {
     },
 
   },
-
-  // UpdateUser: {
-  //   updateUser: async (_, { input }) => {
-  //     const { email, password, fname, lname } = input;
-  //     console.log("aaaaa");
-  //     const userToCreate =  UserModel.findByIdAndUpdate({_id:"6616bd0500db25d1ab0bea38"},input,{new:true});
-  //     const user = await userToCreate.save();
-  //     const token = jwt.sign(
-  //       { userId: user._id, email: user.email },
-  //       process.env.JWT_PRIVATE_KEY,
-  //       { expiresIn: process.env.TOKEN_EXPIRY_TIME }
-  //     );
-
-  //     return {
-  //       __typename: 'UserWithToken',
-  //       ...user._doc,
-  //       userJwtToken: {
-  //         token: token,
-  //       },
-  //     };
-  //   },
-
-  // },
-
 };
 
 export default userResolver;
