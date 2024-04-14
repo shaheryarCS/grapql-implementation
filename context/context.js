@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import throwCustomError, {
   ErrorTypes,
 } from '../helpers/error-handler.helper.js';
+import { getUserRedis } from '../cache/user.cache.js';
 
 const getUser = async (token) => {
   try {
@@ -36,6 +37,12 @@ const context = async ({ req, res }) => {
 
   if (!user) {
     throwCustomError('User is not Authenticated', ErrorTypes.UNAUTHENTICATED);
+  }
+
+  //check if user exist in cache
+  const redisUser_id = await getUserRedis(user?.userId);
+  if (!redisUser_id) {
+    throwCustomError('User is not found', ErrorTypes.BAD_USER_INPUT);
   }
 
   // add the user to the context

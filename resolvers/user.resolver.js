@@ -6,7 +6,7 @@ import throwCustomError, {
 } from '../helpers/error-handler.helper.js';
 import { GraphQLError } from 'graphql';
 import {constant} from '../helpers/constant.js';
-
+import { deleteUserRedis, setUserRedis } from '../cache/user.cache.js';
 const userResolver = {
   Query: {
     // Destructing {total} is same sa args.total
@@ -50,6 +50,8 @@ const userResolver = {
         lname: lname,
       });
       const user = await userToCreate.save();
+      //store user in redis
+      setUserRedis(user._doc);
       const token = jwt.sign(
         { userId: user._id, email: user.email },
         process.env.JWT_PRIVATE_KEY,
@@ -108,7 +110,8 @@ const userResolver = {
       const userId = context?.user?.userId;
       let user; 
       user = await UserModel.findByIdAndUpdate({_id:userId},{collectionStatus:constant.COLLECTION_STATUS[1]},{new:true});
-      console.log("user",user);
+      //delete from cache
+      deleteUserRedis(user?._id);
 
       return {
         collectionStatus:user?.collectionStatus,
