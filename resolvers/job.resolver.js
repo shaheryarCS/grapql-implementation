@@ -1,11 +1,5 @@
 import JobModel from '../models/job.model.js';
-import userHelper from '../helpers/user.helper.js';
-import jwt from 'jsonwebtoken';
-import throwCustomError, {
-  ErrorTypes,
-} from '../helpers/error-handler.helper.js';
 import { GraphQLError } from 'graphql';
-import {constant} from '../helpers/constant.js';
 import { addJobQueue } from '../config/queue.js';
 
 const jobResolver = {
@@ -26,16 +20,23 @@ const jobResolver = {
     create: async (_, { input },context) => {
       const userId = context?.user?.userId;
       const { name } = input;
+      //simualte the job for specific time
+      const time = Math.random() * 60 | 0;
       const jobToCreate = new JobModel({
         userId:userId,
-        name: name
+        name: name,
+        estimatedTime:time
         });
       const job = await jobToCreate.save();
       try {
-         addJobQueue({_id:job._doc?._id,status:job._doc?.status});
+         addJobQueue({
+          _id:job._doc?._id,
+          status:job._doc?.status,
+          estimatedTime:job._doc?.estimatedTime
+        });
 
       } catch (error) {
-        console.log("error",error);
+        throw new GraphQLError(error.message);
       }
 
       return {

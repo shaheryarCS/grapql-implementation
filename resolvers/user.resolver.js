@@ -69,7 +69,7 @@ const userResolver = {
 
     login: async (_, { input: { email, password } }, context) => {
       const user = await UserModel.findOne({
-        $and: [{ email: email }, { password: password }],
+        $and: [{ email: email }, { password: password },{ collectionStatus:constant.COLLECTION_STATUS[0]  }],
       });
       if (user) {
         const token = jwt.sign(

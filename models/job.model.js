@@ -12,6 +12,9 @@ const jobSchema = new Schema(
       type: String,
       required: true,
     },
+    estimatedTime:{
+      type:Number
+    },
     status: {
       type: String,
       default: constant.JOB_STATUS[0]

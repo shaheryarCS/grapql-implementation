@@ -10,6 +10,7 @@ export const addJobQueue = async (data) => {
   const job = await JobQueue.add(data,options);
 }
 JobQueue.process(10, async(job)=>{
+  const time =  job?.data?.estimatedTime;
   setTimeout(async () => {
     const jobId = job?.data?._id;
     try {
@@ -20,7 +21,7 @@ JobQueue.process(10, async(job)=>{
 
     }
 
-  }, 3 * 300 * 60);
+  }, 1000*time);
 
 
   return Promise.resolve();
